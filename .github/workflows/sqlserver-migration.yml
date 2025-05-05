@@ -20,14 +20,10 @@ jobs:
         sudo apt-get update
         sudo ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev
 
-    - name: Run all SQL scripts
+    - name: Run SQL scripts
+      shell: bash
       run: |
         for file in ./sql/*.sql; do
           echo "Running $file..."
-          /opt/mssql-tools/bin/sqlcmd \
-            -S "${{ secrets.SQL_SERVER }}" \
-            -d "${{ secrets.SQL_DATABASE }}" \
-            -U "${{ secrets.SQL_USER }}" \
-            -P "${{ secrets.SQL_PASSWORD }}" \
-            -i "$file"
+          /opt/mssql-tools/bin/sqlcmd -S COGNINE-L229 -U sa -P 2207 -i "$file"
         done
