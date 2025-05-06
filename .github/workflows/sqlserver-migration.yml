@@ -22,10 +22,13 @@ jobs:
 
     - name: Deploy SQL Script
       env:
-        SQL_SERVER: "tcp:localhost"        # SQL Server hostname or IP
-        SQL_DATABASE: "flask_db"    # Database name
-        SQL_USERNAME: "sa"    # SQL username
-        SQL_PASSWORD: "2207"     # SQL password stored in GitHub secrets
+        SQL_SERVER: "tcp:localhost"            # SQL Server hostname or IP
+        SQL_DATABASE: "flask_db"               # Database name
+        SQL_USERNAME: "sa"                     # SQL username
+        SQL_PASSWORD: "2207"                 # SQL password
       run: |
         echo "Deploying SQL changes to the on-premises SQL Server"
-        sqlcmd -S $SQL_SERVER -d $SQL_DATABASE -U $SQL_USERNAME -P $SQL_PASSWORD -i "./sql\customer_table.sql"
+        echo "SQL Server: $SQL_SERVER"
+        echo "SQL Database: $SQL_DATABASE"
+        echo "SQL Username: $SQL_USERNAME"
+        sqlcmd -S "$SQL_SERVER" -d "$SQL_DATABASE" -U "$SQL_USERNAME" -P "$SQL_PASSWORD" -i "./sql/customer_table.sql"
