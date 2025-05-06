@@ -1,22 +1,29 @@
-name: Run SQL Script on SQL Server (Self-Hosted)
+name: Deploy SQL Changes to On-Premises SQL Server
 
 on:
   push:
-    branches: dev
-  workflow_dispatch:
+    branches:
+      - dev
 
 jobs:
-  run-sql:
-    runs-on: self-hosted  # This will use the runner installed on your local machine
+  deploy:
+    runs-on: windows-latest
+
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
 
-    - name: Run SQL scripts using sqlcmd
-      shell: powershell
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up SQLCMD
+      uses: microsoft/setup-sqlcmd@v1
+
+    - name: Deploy SQL Script
+      env:
+        SQL_SERVER: "tcp:localhost"        # SQL Server hostname or IP
+        SQL_DATABASE: "flask_db"    # Database name
+        SQL_USERNAME: "sa"    # SQL username
+        SQL_PASSWORD: "2207"     # SQL password stored in GitHub secrets
       run: |
-        $sqlFiles = "E:\Database versioning using github actions\DB-migrations\sql\customer_table.sql"
-        Get-ChildItem -Path ".\sql\" -Filter *.sql | ForEach-Object {
-          Write-Host "Running $($_.FullName)..."
-          sqlcmd -S localhost -U sa -P 2207 -i $sqlFiles
+        echo "Deploying SQL changes to the on-premises SQL Server"
+        sqlcmd -S $SQL_SERVER -d $SQL_DATABASE -U $SQL_USERNAME -P $SQL_PASSWORD -i "./sql\customer_table.sql"
