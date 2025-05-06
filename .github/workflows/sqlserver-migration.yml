@@ -25,5 +25,5 @@ jobs:
       run: |
         for file in ./sql/*.sql; do
           echo "Running $file..."
-          /opt/mssql-tools/bin/sqlcmd -S COGNINE-L229 -U sa -P 2207 -i "$file"
+          /opt/mssql-tools/bin/sqlcmd -S tcp:localhost -U sa -P 2207 -i "$file"
         done
